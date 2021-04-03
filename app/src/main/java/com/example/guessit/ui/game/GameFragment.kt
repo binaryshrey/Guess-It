@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.guessit.R
 import com.example.guessit.databinding.FragmentGameBinding
@@ -14,6 +15,7 @@ import com.example.guessit.databinding.FragmentGameBinding
 
 class GameFragment : Fragment() {
 
+    private lateinit var viewModel: GameViewModel
 
     private var currentWord = ""
     private var currentScore = 0
@@ -26,6 +28,8 @@ class GameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_game,container,false)
+
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
         resetList()
         nextWord()
