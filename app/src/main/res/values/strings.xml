@@ -5,4 +5,10 @@
     <string name="play">Play</string>
     <string name="get_ready_to">Get ready to</string>
     <string name="guess_the_word">Guess the word!</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="tuna">Tuna</string>
+    <string name="the_word_is">The word is ..</string>
+    <string name="score_02">Score : 02</string>
+    <string name="_0_00">0:00</string>
 </resources>

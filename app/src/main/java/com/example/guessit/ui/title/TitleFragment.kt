@@ -23,7 +23,8 @@ class TitleFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_title,container,false)
 
         binding.playButton.setOnClickListener { view : View->
-            Toast.makeText(context,"Play Clicked",Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context,"Play Clicked",Toast.LENGTH_SHORT).show()
+            view.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
         }
 
         return binding.root
