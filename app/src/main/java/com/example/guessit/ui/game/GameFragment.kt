@@ -29,13 +29,16 @@ class GameFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
+        binding.gameViewModel = viewModel
+        binding.setLifecycleOwner(this)
+
         viewModel.currentScore.observe(viewLifecycleOwner, Observer { newScore ->
             binding.scoreTextView.text = "Score : " + newScore.toString()
 
         })
-        viewModel.currentWord.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.wordTextView.text = newWord
-        })
+//        viewModel.currentWord.observe(viewLifecycleOwner, Observer { newWord ->
+//            binding.wordTextView.text = newWord
+//        })
 
         viewModel.gameFinished.observe(viewLifecycleOwner, Observer { hasFinished ->
             if (hasFinished){
@@ -50,16 +53,16 @@ class GameFragment : Fragment() {
 
         })
 
-        binding.skipButton.setOnClickListener { view : View->
-            Toast.makeText(context,"Skip Clicked", Toast.LENGTH_SHORT).show()
-            viewModel.onSkip()
-
-        }
-        binding.nextButton.setOnClickListener { view : View->
-            Toast.makeText(context,"Next Clicked", Toast.LENGTH_SHORT).show()
-            viewModel.onCorrect()
-
-        }
+//        binding.skipButton.setOnClickListener { view : View->
+//            Toast.makeText(context,"Skip Clicked", Toast.LENGTH_SHORT).show()
+//            viewModel.onSkip()
+//
+//        }
+//        binding.nextButton.setOnClickListener { view : View->
+//            Toast.makeText(context,"Next Clicked", Toast.LENGTH_SHORT).show()
+//            viewModel.onCorrect()
+//
+//        }
 
 
         return binding.root
