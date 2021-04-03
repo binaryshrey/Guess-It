@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.guessit.R
 import com.example.guessit.databinding.FragmentGameBinding
 import com.example.guessit.databinding.FragmentTitleBinding
@@ -72,11 +74,16 @@ class GameFragment : Fragment() {
         //Select and remove a word from the list
         if (wordList.isEmpty()) {
             Toast.makeText(context,"Game Finished",Toast.LENGTH_SHORT).show()
+            gameFinished()
         } else {
             currentWord = wordList.removeAt(0)
         }
         updateWordText()
         updateScoreText()
+    }
+
+    private fun gameFinished() {
+        findNavController(this).navigate(R.id.action_gameFragment_to_scoreFragment)
     }
 
     private fun onSkip() {
