@@ -1,12 +1,14 @@
 package com.example.guessit.ui.game
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.guessit.R
@@ -16,10 +18,6 @@ import com.example.guessit.databinding.FragmentGameBinding
 class GameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
-
-    private var currentWord = ""
-    private var currentScore = 0
-    private lateinit var wordList : MutableList<String>
 
     private lateinit var binding : FragmentGameBinding
     override fun onCreateView(
@@ -31,82 +29,51 @@ class GameFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
-        resetList()
-        nextWord()
+        viewModel.currentScore.observe(viewLifecycleOwner, Observer { newScore ->
+            binding.scoreTextView.text = "Score : " + newScore.toString()
+
+        })
+        viewModel.currentWord.observe(viewLifecycleOwner, Observer { newWord ->
+            binding.wordTextView.text = newWord
+        })
+
+        viewModel.gameFinished.observe(viewLifecycleOwner, Observer { hasFinished ->
+            if (hasFinished){
+                Toast.makeText(context,"Game Finished",Toast.LENGTH_SHORT).show()
+                gameFinished()
+                viewModel.onGameFinishComplete()
+            }
+        })
+
+        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
+            binding.timerTextView.text = DateUtils.formatElapsedTime(newTime)
+
+        })
 
         binding.skipButton.setOnClickListener { view : View->
             Toast.makeText(context,"Skip Clicked", Toast.LENGTH_SHORT).show()
-            onSkip()
+            viewModel.onSkip()
+
         }
         binding.nextButton.setOnClickListener { view : View->
             Toast.makeText(context,"Next Clicked", Toast.LENGTH_SHORT).show()
-            onCorrect()
+            viewModel.onCorrect()
+
         }
+
 
         return binding.root
     }
 
-    private fun resetList() {
-        wordList = mutableListOf(
-            "queen",
-            "hospital",
-            "basketball",
-            "cat",
-            "change",
-            "snail",
-            "soup",
-            "calendar",
-            "sad",
-            "desk",
-            "guitar",
-            "home",
-            "railway",
-            "zebra",
-            "jelly",
-            "car",
-            "crow",
-            "trade",
-            "bag",
-            "roll",
-            "bubble"
-        )
-        wordList.shuffle()
-    }
-    private fun nextWord() {
-        //Select and remove a word from the list
-        if (wordList.isEmpty()) {
-            Toast.makeText(context,"Game Finished",Toast.LENGTH_SHORT).show()
-            gameFinished()
-        } else {
-            currentWord = wordList.removeAt(0)
-        }
-        updateWordText()
-        updateScoreText()
-    }
+
 
     private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameFragmentToScoreFragment(currentScore)
+        val action = GameFragmentDirections.actionGameFragmentToScoreFragment(viewModel.currentScore.value?: 0)
         findNavController(this).navigate(action)
     }
 
-    private fun onSkip() {
-        currentScore--
-        nextWord()
-    }
-
-    private fun onCorrect() {
-        currentScore++
-        nextWord()
-    }
 
 
 
-    private fun updateWordText() {
-        binding.wordTextView.text = currentWord
 
-    }
-
-    private fun updateScoreText() {
-        binding.scoreTextView.text = "Score : " + currentScore.toString()
-    }
 }
